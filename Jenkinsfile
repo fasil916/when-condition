@@ -8,7 +8,7 @@ pipeline {
                 
                 
                
-                git branch: 'main', url: 'https://github.com/fasil916/terraform-deployment-assignment.git'
+                git branch: 'main', url: 'https://github.com/fasil916/when-condition.git'
             }
         }
 
