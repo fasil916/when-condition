@@ -6,8 +6,7 @@ pipeline {
             steps {
                 script {
                     // Jenkins automatically detects the branch in a multibranch pipeline
-                    #checkout scm
-
+                    
                     // Output the branch name to confirm which branch is checked out
                     echo "Checked out branch: ${env.BRANCH_NAME}"
                 }
