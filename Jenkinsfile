@@ -2,21 +2,23 @@ pipeline {
     agent any
 
     stages {
-        
-         stage('Checkout') {
+        stage('Checkout') {
             steps {
-                
-                
-               
-                git branch: 'main', url: 'https://github.com/fasil916/when-condition.git'
+                script {
+                    // Jenkins automatically detects the branch in a multibranch pipeline
+                    checkout scm
+
+                    // Output the branch name to confirm which branch is checked out
+                    echo "Checked out branch: ${env.BRANCH_NAME}"
+                }
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building the application...${env.BRANCH_NAME}"
+                echo "Building the application... Branch: ${env.BRANCH_NAME}"
                 sh 'echo Build step running'
-                // Replace with your real build commands
+                // Add your build commands here
             }
         }
 
@@ -24,16 +26,17 @@ pipeline {
             steps {
                 echo "Pushing Docker image..."
                 sh 'echo Image push running'
-                // Replace with your docker push commands
+                // Replace with your Docker push commands
             }
         }
 
-        stage('Deploy to main') {
+        // Deploy to DEV environment if branch is 'dev'
+        stage('Deploy to Dev') {
             when {
-                branch 'main'
+                branch 'dev'  // Only runs when the branch is 'dev'
             }
             steps {
-                echo "Deploying to main environment..."
+                echo "Deploying to DEV environment..."
                 sh '''
                 # Add your DEV deployment commands here
                 echo "Deploying to DEV"
@@ -41,9 +44,10 @@ pipeline {
             }
         }
 
-        stage('Deploy to PROD') {
+        // Deploy to PROD environment if branch is 'main'
+        stage('Deploy to Prod') {
             when {
-                branch 'prod'
+                branch 'main'  // Only runs when the branch is 'main'
             }
             steps {
                 echo "Deploying to PROD environment..."
@@ -56,8 +60,14 @@ pipeline {
     }
 
     post {
-        success { echo "Pipeline Succeeded ✅" }
-        failure { echo "Pipeline Failed ❌" }
-        always { echo "Pipeline Finished." }
+        success {
+            echo "Pipeline Succeeded ✅"
+        }
+        failure {
+            echo "Pipeline Failed ❌"
+        }
+        always {
+            echo "Pipeline Finished."
+        }
     }
 }
